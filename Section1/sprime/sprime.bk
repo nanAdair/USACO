@@ -1,0 +1,76 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: sprime
+*/
+#include <stdio.h>
+#include <math.h>
+
+int isPrime(int);
+void makePrimeTable(int *);
+int check(int);
+
+int main()
+{
+    /*
+    int number[90000000];
+    int i;
+    for(i = 0; i < 90000000; i++)
+        number[i] = 1;
+   */
+    int i;
+    FILE *fin = fopen("sprime.in", "r");
+    FILE *fout = fopen("sprime.out", "w");
+    int length;
+    fscanf(fin, "%d", &length);
+    
+    int begin, end, mul;
+    begin = 2;
+    end = 8;
+    mul = 1;
+    for(i = 1; i < length; i++)
+        mul *= 10;
+    begin *= mul;
+    end *= mul;
+    for(i = begin; i < end; i++){
+        int temp = i / mul;
+        if(temp == 4 || temp == 6)
+            i += mul;
+        if(check(i))
+            fprintf(fout, "%d\n", i);
+    }
+    
+    fclose(fin);
+    fclose(fout);
+}
+
+int isPrime(int a)
+{
+    int i, j;
+    j = sqrt(a);
+    for(i = 2; i <= j; i++){
+        if(a % i == 0)
+            return 0;
+    }
+    return 1;
+}
+
+int check(int a)
+{
+    do{
+        if(!isPrime(a))
+            return 0;
+    }while(a /= 10);
+    return 1;
+}
+void makePrimeTable(int *number)
+{
+    int i, j;
+    for(i = 2; i < 90000000; i++){
+        if(number[i] == 0)
+            continue;
+        for(j = 2; i*j < 90000000; j++)
+            number[i*j] = 0;
+    }
+}
+

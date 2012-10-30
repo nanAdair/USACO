@@ -1,0 +1,69 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: numtri
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+struct tree {
+    int number;
+    struct tree *left;
+    struct tree *right;
+};
+
+void makeTree(int *, struct tree *, int, int, int);
+void dfs(struct tree *, int, int *);
+
+int main()
+{
+    FILE *fin = fopen("numtri.in", "r");
+    FILE *fout = fopen("numtri.out", "w");
+    int digits[500501];
+    int i, count, max, sum;
+    fscanf(fin, "%d", &count);
+    count = (1+count)*count/2;
+    for(i = 1; i <= count; i++)
+        fscanf(fin, "%d", &digits[i]);
+    
+    struct tree head;
+    makeTree(digits, &head, 1, count, 0);
+    max = sum = 0;
+    dfs(&head, sum, &max);
+    
+    fprintf(fout, "%d\n", max);
+    fclose(fin);
+    fclose(fout);
+}
+
+void makeTree(int *digits, struct tree *node, int index, int count, int depth)
+{
+    if(index <= count){
+        node->number = digits[index];
+        depth++;
+        if(index + depth <= count){
+            node->left = (struct tree *)malloc(sizeof(struct tree));
+            node->right = (struct tree *)malloc(sizeof(struct tree));
+            makeTree(digits, node->left, index+depth, count, depth);
+            makeTree(digits, node->right, index+depth+1, count, depth);
+        }
+        else{
+            node->left = NULL;
+            node->right = NULL;
+        }
+    }
+}
+
+void dfs(struct tree *node, int sum, int *max)
+{
+    sum = sum + node->number;
+    if(node->left == NULL || node->right == NULL){
+        if(sum > *max)
+            *max = sum;
+    }
+    else{
+        dfs(node->left, sum, max);
+        dfs(node->right, sum, max);
+    }
+    
+}

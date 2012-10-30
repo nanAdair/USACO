@@ -1,0 +1,73 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: pprime
+*/
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+
+int reverse(int);
+int isPrime(int);
+void makePrimeTable(int *, int);
+
+int main()
+{
+    FILE *fin = fopen("pprime.in", "r");
+    FILE *fout = fopen("pprime.out", "w");
+    int begin, end;
+    fscanf(fin, "%d %d", &begin, &end);
+    
+    int prime[1000001] = {1};
+    int i;
+    for(i = 0; i < 1000001; i++)
+        prime[i] = 1;
+    makePrimeTable(prime, end);
+    /*  for(i = begin; i <= end; i++)
+        printf("--: %d\n", prime[i]);
+    */
+    
+    for(i = begin; i <= end; i++){
+        if(prime[i] == 1){
+            if(reverse(i) == i)
+                fprintf(fout, "%d\n", i);
+        }
+    }
+    
+    fclose(fin);
+    fclose(fout);
+}
+/*  
+int isPrime(int a)
+{
+    int i;
+    for(i = 2; i <=sqrt(a); i++)
+        if(a % i == 0)
+            return 0;
+    return 1;
+}
+*/
+
+int reverse(int a)
+{
+    int temp = 0;
+    while(a != 0){
+        temp = temp * 10 + a % 10;
+        a /= 10;
+    }
+    return temp;
+}
+
+void makePrimeTable(int *prime, int limit)
+{
+   int i, j;
+   for(i = 2; i <= limit; i++){
+       if(prime[i] == 0)
+           continue;
+       j = 2;
+       while(i*j <= limit){
+           prime[i*j] = 0;
+           j++;
+       }
+   }
+}

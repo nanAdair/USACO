@@ -1,0 +1,65 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: checker
+*/
+#include <stdio.h>
+
+int order(int);
+void test(int, int, int, int);
+
+int mark[14];
+int upper, number;
+int count = 0;
+FILE *fin, *fout;
+
+int main()
+{
+    fin = fopen("checker.in", "r");
+    fout = fopen("checker.out", "w");
+    fscanf(fin, "%d", &number);
+    upper = (1 << number) - 1;
+    printf("%d\n", upper);
+    
+    test(0, 0, 0, 1);
+    
+    fprintf(fout, "%d\n", count);
+    
+    fclose(fin);
+    fclose(fout);
+}
+
+void test(int row, int rp, int lp, int depth)
+{
+    if(row != upper){
+        int pos, p;
+        pos = upper & ~(row | rp | lp);
+        while(pos != 0){
+            printf("test\n");
+            printf("%d\n", pos);
+            p = pos & -pos;
+            pos = pos - p;
+            if(count < 3)
+                mark[depth] = order(p);
+            test(row+p, (rp+p) >> 1, (lp+p) << 1, depth+1);
+        }
+    }
+    else{
+        count++;
+        if(count <= 3){
+            int i;
+            for(i = 1; i < number; i++)
+                fprintf(fout, "%d ", mark[i]);
+            fprintf(fout, "%d\n", mark[i]);
+        }
+    }
+}
+
+int order(int a)
+{
+    int res = 0;
+    do{
+        res++;
+    }while(a/2);
+    return res;
+}

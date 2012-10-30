@@ -1,0 +1,168 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: checker
+*/
+#include <stdio.h>
+
+int number[14][14];
+int column[14];
+int count = 0;
+
+void place(int, int);
+int canPlace(int, int, int);
+void print();
+void markdia(int , int , int);
+void unmarkdia(int, int, int);
+FILE *fout;
+
+int main()
+{
+    FILE *fin = fopen("checker.in", "r");
+    fout = fopen("checker.out", "w");
+    int num, i, j;
+    fscanf(fin, "%d", &num);
+    for(i = 0; i < 14; i++)
+        for(j = 0; j < 14; j++)
+            number[i][j] = 0;
+    for(i = 0; i < 14; i++)
+        column[i] = 0;
+    
+    place(1, num);
+    
+    fprintf(fout, "%d\n", count);
+    fclose(fin);
+    fclose(fout);
+}
+
+void place(int row, int max)
+{
+    if(row > max){
+        count++;
+        if(count < 4)
+        print(max);
+    }
+    else{
+        int col;
+        for(col = 1; col <= max; col++){
+            if(column[col] == 0 && canPlace(row, col, max)){
+                column[col] = 1;
+                number[row][col] = 1;
+                markdia(row, col, max);
+                place(row+1, max);
+                number[row][col] = 0;
+                column[col] = 0;
+                unmarkdia(row, col, max);
+            }
+        }
+    }
+}
+
+void markdia(int row, int col, int max)
+{
+    int i;
+    /*  
+    i = 1;
+    while((row-i) >= 1 && (col+i) <= max){
+        number[row-i][col+i] = 2;
+        i++;
+    }
+    */
+    i = 1;
+    while((row+i) <= max && (col+i) <= max){
+        number[row+i][col+i] = 2;
+        i++;
+    }
+    /*  
+    i = 1;
+    while((row-i) >= 1 && (col-i) >= 1){
+        number[row-i][col-i] = 2;
+        i++;
+    }
+    
+    */
+    i = 1;
+    while((row+i) <= max && (col-i) >= 1){
+        number[row+i][col-i] = 2;
+        i++;
+    }
+}
+
+void unmarkdia(int row, int col, int max)
+{
+    int i;
+    /*  
+    i = 1;
+    while((row-i) >= 1 && (col+i) <= max){
+        number[row-i][col+i] = 0;
+        i++;
+    }
+    */
+    i = 1;
+    while((row+i) <= max && (col+i) <= max){
+        number[row+i][col+i] = 0;
+        i++;
+    }
+    /*  
+    i = 1;
+    while((row-i) >= 1 && (col-i) >= 1){
+        number[row-i][col-i] = 0;
+        i++;
+    }
+    */
+    i = 1;
+    while((row+i) <= max && (col-i) >= 1){
+        number[row+i][col-i] = 0;
+        i++;
+    }
+}
+int canPlace(int row, int col, int max)
+{
+    int i;
+    if(number[row][col] != 0)
+        return 0;
+    for(i = 1; i <= max; i++)
+        if(number[row][i] == 1 || number[i][col] == 1)
+            return 0;
+    i = 1;
+    while((row-i) >= 1 && (col+i) <= max){
+        if(number[row-i][col+i] == 1)
+            return 0;
+        i++;
+    }
+    /*  
+    i = 1;
+    while((row+i) <= max && (col+i) <= max){
+        if(number[row+i][col+i] == 1)
+            return 0;
+        i++;
+    }
+    */
+    i = 1;
+    while((row-i) >= 1 && (col-i) >= 1){
+        if(number[row-i][col-i] == 1)
+            return 0;
+        i++;
+    }
+    /*
+    i = 1;
+    while((row+i) <= max && (col-i) >= 1){
+        if(number[row+i][col-i] == 1)
+            return 0;
+        i++;
+    }
+    */
+    return 1;
+}
+
+void print(int max)
+{
+    int i, j;
+    for(i = 1; i <= max; i++)
+        for(j = 1; j <= max; j++){
+            if(number[i][j] == 1 && i != max)
+                fprintf(fout, "%d ", j);
+            else if(number[i][j] == 1)
+                fprintf(fout, "%d\n", j);
+        }
+}
