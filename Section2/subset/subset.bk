@@ -1,0 +1,43 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: subset
+*/
+#include <stdio.h>
+
+int count, number;
+void dfs(int, int, int);
+
+int main()
+{
+    FILE *fin = fopen("subset.in", "r");
+    FILE *fout = fopen("subset.out", "w");
+    int sum;
+    fscanf(fin, "%d", &number);
+    count = 0;
+    sum = (1 + number) * number / 4;
+    
+    dfs(0, 0, sum);
+    
+    fprintf(fout, "%d\n", count/2);
+    
+    fclose(fin);
+    fclose(fout);
+}
+
+void dfs(int index, int val, int sum)
+{
+    int i;
+    for (i = index + 1; i <= number; i++) {
+        val += i;
+        //printf("value: %d %d\n", val, sum);
+        if (val < sum) {
+            dfs(i, val, sum);
+            val -= i;
+        }else if (val == sum) {
+            count++;
+            break;
+        }else 
+            break;
+    }
+}
