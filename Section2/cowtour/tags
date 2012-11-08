@@ -1,0 +1,44 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+INF	cowtour.c	5;"	d	file:
+INF	test.c	5;"	d	file:
+NUM	cowtour.c	4;"	d	file:
+NUM	test.c	4;"	d	file:
+area1	cowtour.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+area1	test.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+area2	cowtour.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+area2	test.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+connect	cowtour.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+connect	test.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+countArea1	cowtour.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+countArea1	test.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+countArea2	cowtour.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+countArea2	test.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+dfs	cowtour.c	/^void dfs(int index, int *count, int *area)$/;"	f
+dfs	test.c	/^void dfs(int index, int *count, int *area)$/;"	f
+dist	cowtour.c	/^float dist(int a, int b)$/;"	f
+dist	test.c	/^float dist(int a, int b)$/;"	f
+distance	cowtour.c	/^float distance[NUM][NUM];$/;"	v
+distance	test.c	/^float distance[NUM][NUM];$/;"	v
+ff	cowtour.c	/^void ff()$/;"	f
+ff	test.c	/^void ff()$/;"	f
+main	cowtour.c	/^int main()$/;"	f
+main	test.c	/^int main()$/;"	f
+number	cowtour.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+number	test.c	/^int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;$/;"	v
+pas	cowtour.c	/^struct point pas[NUM];         \/\/point on the map$/;"	v	typeref:struct:point
+pas	test.c	/^struct point pas[NUM];         \/\/point on the map$/;"	v	typeref:struct:point
+point	cowtour.c	/^struct point {$/;"	s	file:
+point	test.c	/^struct point {$/;"	s	file:
+visited	cowtour.c	/^    int visited;$/;"	m	struct:point	file:
+visited	test.c	/^    int visited;$/;"	m	struct:point	file:
+wallshall	cowtour.c	/^float wallshall()$/;"	f
+wallshall	test.c	/^float wallshall()$/;"	f
+x	cowtour.c	/^    int x;$/;"	m	struct:point	file:
+x	test.c	/^    int x;$/;"	m	struct:point	file:
+y	cowtour.c	/^    int y;$/;"	m	struct:point	file:
+y	test.c	/^    int y;$/;"	m	struct:point	file:

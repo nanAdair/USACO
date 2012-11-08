@@ -1,0 +1,192 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: cowtour
+*/
+//时间上过去了，但是此种默认了只有两个分块，反而没有按通用的情况而写复杂了
+#include <stdio.h>
+#include <math.h>
+
+#define NUM 151
+#define INF 1000000
+
+struct point {
+    int x;
+    int y;
+    int visited;
+};
+
+struct point pas[NUM];         //point on the map
+float distance[NUM][NUM];
+int area1[NUM], area2[NUM], connect[NUM][NUM], countArea1, countArea2, number;
+
+void ff();
+float  wallshall();
+float dist(int, int);
+void dfs(int, int *, int *);
+float findMax();
+
+#define USACO
+int main()
+{
+#ifdef USACO
+//    freopen("cowtour.in", "r", stdin);
+//    freopen("cowtour.out", "w", stdout);
+#endif
+    FILE *fin = fopen("cowtour.in", "r");
+    FILE *fout = fopen("cowtour.out", "w");
+    int i, j;
+    float diameter, maxnow;
+    fscanf(fin, "%d", &number);
+    for (i = 0; i < number; i++)
+        fscanf(fin, "%d %d", &pas[i].x, &pas[i].y);
+    
+    for (i = 0; i < number; i++) {
+        char buffer[NUM+1];
+        fscanf(fin, "%s", buffer);
+        for (j = 0; j < number; j++) {
+            connect[i][j] = buffer[j] - '0';
+        }
+    }
+    
+    ff();
+    
+    diameter = INF;
+    maxnow = wallshall();
+    
+    for (i = 0; i < countArea1; i++) {
+        for (j = 0; j < countArea2; j++) {
+            int con1, con2;
+            float tempDist;
+            con1 = area1[i];             //out point in the first group
+            con2 = area2[j];             //out point in the second group
+            distance[con2][con1] = distance[con1][con2] = dist(con1, con2);
+            connect[con2][con1] = connect[con1][con2] = 1;
+            tempDist = findMax(con1, con2);
+            tempDist = tempDist > maxnow ? tempDist : maxnow;
+            diameter = diameter > tempDist ? tempDist : diameter;
+            distance[con2][con1] = distance[con1][con2] = INF;
+            connect[con2][con1] = connect[con1][con2] = 0;
+        }
+    }
+    
+    fprintf(fout, "%.6f\n", diameter);
+    
+    fclose(fin);
+    fclose(fout);
+}
+
+float findMax(int a, int b)
+{
+    float temp = 0;
+    int i, j;
+    float add = dist(a, b);
+    for (i = 0; i < countArea1; i++) {
+        for (j = 0; j < countArea2; j++) {
+            float length, aa, bb;
+            int con1, con2;
+            con1 = area1[i];
+            con2 = area2[j];
+            aa = distance[con1][a];
+            bb = distance[b][con2];
+            if (con1 == a)
+                aa = 0;
+            if (con2 == b)
+                bb = 0;
+            length = aa + add + bb;
+            temp = length > temp ? length : temp;
+        }
+    }
+    return temp;
+}
+float wallshall()
+{
+    int i, j, k;
+    float temp[NUM][NUM];
+    
+    /*  
+    for (i = 0; i < number; i++) {
+        for (j = 0; j < number; j++) {
+            temp[i][j] = distance[i][j];
+        }
+    }
+    */
+    for (k = 0; k < number; k++) {
+        for (i = 0; i < number; i++) {
+            for (j = 0; j < number; j++) {
+                if (i == j)
+                    continue;
+               // if (temp[i][k] + temp[k][j] < temp[i][j])
+               //     temp[i][j] = temp[i][k] + temp[k][j];
+                if (distance[i][k] + distance[k][j] < distance[i][j])
+                    distance[i][j] = distance[i][k] + distance[k][j];
+            }
+        }
+    }
+      
+    float max = 0;
+    for (i = 0; i < number; i++) {
+        for (j = 0; j < number; j++) {
+            if (i == j || distance[i][j] == INF)
+                continue;
+            max = max > distance[i][j] ? max : distance[i][j];
+        }
+    }
+    
+    
+    /*   
+    for (i = 0; i < number; i++) {
+        for (j = 0; j < number; j++) {
+            printf("%.1f ", distance[i][j]);
+        }
+        printf("\n");
+    }
+    */
+    return max;
+}
+
+void ff()
+{
+    int i, j;
+    for (i = 0; i < number; i++) {
+        for (j = 0; j < number; j++) {
+            if (connect[i][j] == 0)
+                distance[i][j] = INF;
+            else
+                distance[i][j] = dist(i, j);
+        }
+    }
+    
+    for (i = 0; i < number; i++)
+        pas[i].visited = 0;
+    
+    countArea1 = countArea2 = 0;
+    for (i = 0; i < number; i++) {
+        if (pas[i].visited == 0 && countArea1 == 0)
+            dfs(i, &countArea1,area1);
+        else if(pas[i].visited == 0 && countArea2 == 0)
+            dfs(i, &countArea2, area2);
+    }
+}
+
+void dfs(int index, int *count, int *area)
+{
+    int i, j;
+    area[*count] = index;
+    pas[index].visited = 1;
+    *count += 1;
+    
+    for (i = 0; i < number; i++) {
+        if (pas[i].visited == 0 && connect[index][i] == 1) {
+            dfs(i, count, area);
+        }
+    }
+}
+
+float dist(int a, int b)
+{
+    float length;
+    length = pow(abs((pas[a].x - pas[b].x)), 2.0) + pow(abs((pas[a].y - pas[b].y)), 2.0);
+    length = sqrt(length);
+    return length;
+}
