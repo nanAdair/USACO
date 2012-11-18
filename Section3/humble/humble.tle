@@ -1,0 +1,47 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: humble
+*/
+#include <stdio.h>
+
+int comprise(int, int *, int);
+
+int main()
+{
+    FILE *fin = fopen("humble.in", "r");
+    FILE *fout = fopen("humble.out", "w");
+    int K, N, set[101], i, count;
+    fscanf(fin, "%d %d", &K, &N);
+    
+    for (i = 0; i < K; i++)
+        fscanf(fin, "%d", &set[i]);
+    
+    count = 0;
+    i = 2;
+    while (count < N) {
+        if (comprise(i, set, K))
+            count++;
+        i++;
+    }
+    
+    fprintf(fout, "%d\n", i-1);
+    
+    fclose(fin);
+    fclose(fout);
+}
+
+int comprise(int digit, int *set, int number)
+{
+    int i;
+    for (i = 0; i < number; i++) {
+        if (digit % set[i] == 0) {
+            digit /= set[i];
+            i--;
+        }
+    }
+    
+    if (digit == 1)
+        return 1;
+    return 0;
+}
