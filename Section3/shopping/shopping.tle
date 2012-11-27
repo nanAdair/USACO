@@ -1,0 +1,123 @@
+/*
+ID: wangbn11
+LANG: C
+TASK: shopping
+*/
+/* 
+ * dfs最多过9个点
+ * */
+#include <stdio.h>
+
+struct special {
+    int code[5];
+    int count[5];
+    int price;
+    int number;
+};
+int numberOfSpecial;      //优惠种类的个数
+int product[1000];        //记录商品号下商品需要的数量
+int code[5];             //5种内需要的商品号
+int price[1000];          //每种商品号的商品的单价
+int countNow[1000];       //记录当前商品的数量
+int priceNow;           //记录当前的价钱
+int res;                //最后结果
+int purchase;            //要购买的商品种类数
+
+int valid();
+int makeFull();
+void dfs(struct special *, int);
+int main()
+{
+    FILE *fin = fopen("shopping.in", "r");
+    FILE *fout = fopen("shopping.out", "w");
+    struct special offers[100];
+    int i, j;
+    fscanf(fin, "%d", &numberOfSpecial);
+    for (i = 0; i < numberOfSpecial; i++) {
+        fscanf(fin, "%d", &offers[i].number);
+        for (j = 0; j < offers[i].number; j++) {
+            fscanf(fin, "%d %d", &offers[i].code[j], &offers[i].count[j]);
+        }
+        fscanf(fin, "%d", &offers[i].price);
+    }
+    
+    int limit;
+    limit = 0;
+    fscanf(fin, "%d", &purchase);
+    for (i = 0; i < purchase; i++) {
+        int a, b, c;
+        fscanf(fin, "%d %d %d", &a, &b, &c);
+        code[i] = a;
+        product[a] = b;
+        price[a] = c;
+        limit += b * c;
+    }
+    res = limit;
+    
+    dfs(offers, 0);
+    
+    fprintf(fout, "%d\n", res);
+    
+    fclose(fin);
+    fclose(fout);
+}
+
+int valid()
+{
+    int i;
+    for (i = 0; i < purchase; i++) {
+        int productCode = code[i];
+        if (countNow[productCode] > product[productCode])
+            return 0;
+    }
+    return 1;
+}
+
+int makeFull()
+{
+    int i;
+    int temp = priceNow;
+    for (i = 0; i < purchase; i++) {
+        int productCode = code[i];
+        if (countNow[productCode] < product[productCode]) {
+            temp += price[productCode] * (product[productCode] - countNow[productCode]);
+        }
+    }
+    return temp;
+}
+
+void dfs(struct special *offers, int index)
+{
+    if (index >= numberOfSpecial)
+        return ;
+    int i, j, flag;
+    flag = 1;
+    for (i = index; i < numberOfSpecial; i++) {
+        for (j = 1; j <= 5; j++) {
+            if (flag == 0)
+                break;
+        //printf("%d %d %d test\n", index, i, j);
+            int k;
+            for (k = 0; k < offers[i].number; k++) {
+                countNow[offers[i].code[k]] += j * offers[i].count[k];
+            }
+            if (valid()) {
+                priceNow += j * offers[i].price;
+                int temp;
+                temp = makeFull();
+                res = res > temp ? temp : res;
+                dfs(offers, index+1);
+                for (k = 0; k < offers[i].number; k++) {
+                    countNow[offers[i].code[k]] -= j * offers[i].count[k];
+                }
+                priceNow -= j * offers[i].price;
+            }else {
+                flag = 0;
+                for (k = 0; k < offers[i].number; k++) {
+                    countNow[offers[i].code[k]] -= j * offers[i].count[k];
+                }
+            }
+        }
+        flag = 1;
+    }
+}
